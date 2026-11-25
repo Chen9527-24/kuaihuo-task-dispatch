@@ -1,0 +1,27 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  @keyframes ambient-breathe {
+    0%, 100% {
+      opacity: 0.8;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.4;
+      transform: scale(1.05);
+    }
+  }
+  .animate-ambient-breathe {
+    animation: ambient-breathe 8s ease-in-out infinite;
+  }
+}
+
+:root { --safe-bottom: env(safe-area-inset-bottom); }
+html, body, #app { min-height: 100%; overflow-x: hidden; }
+body { font-size: 16px; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; background: #f8fafc; }
+*, *::before, *::after { box-sizing: border-box; }
+* { -webkit-tap-highlight-color: transparent;margin:0;padding:0; }
+img, video { max-width: 100%; height: auto; }
+.safe-area-b { padding-bottom: var(--safe-bottom); }

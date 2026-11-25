@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="720" height="620" viewBox="0 0 720 620" role="img" aria-labelledby="title desc">
+<title id="title">任务操作通用示意</title><desc id="desc">阅读任务要求，在相应平台完成操作，返回本站提交任务证明。此图不是平台截图。</desc>
+<rect width="720" height="620" rx="28" fill="#f1f5f9"/><g font-family="sans-serif" fill="#0f172a"><text x="48" y="78" font-size="32" font-weight="bold">任务操作通用示意</text><text x="48" y="126" font-size="22" fill="#64748b">非平台截图 · 请以任务实际要求为准</text>
+<rect x="44" y="166" width="632" height="100" rx="16" fill="white"/><text x="68" y="226" font-size="26">1　阅读任务要求，确认操作账号</text>
+<rect x="44" y="292" width="632" height="100" rx="16" fill="white"/><text x="68" y="352" font-size="26">2　在相应平台完成规定操作</text>
+<rect x="44" y="418" width="632" height="100" rx="16" fill="white"/><text x="68" y="478" font-size="26">3　返回本站，提交任务证明</text>
+<text x="48" y="572" font-size="20" fill="#64748b">部署者可替换为自行制作并获授权的操作指引。</text></g></svg>

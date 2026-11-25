@@ -1,0 +1,19 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>部署准备 · 任务分发管理台</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#f5f7f9;color:#15242b;font:16px/1.7 system-ui,-apple-system,"PingFang SC",sans-serif}main{max-width:940px;margin:0 auto;padding:36px 24px 60px}a{color:#075e69}header{border-bottom:1px solid #cdd6db;padding-bottom:20px}h1{font-size:clamp(30px,5vw,50px);margin:22px 0 8px;line-height:1.2}h2{font-size:24px;margin:30px 0 10px}h3{margin:0 0 4px;font-size:18px}p{margin:5px 0}article{background:white;border:1px solid #dbe3e7;border-radius:12px;padding:16px 20px;margin:10px 0}code{font-size:.88em;overflow-wrap:anywhere}ul,ol{padding-left:24px}li{margin:5px 0}
+</style>
+<main><header><a href="/task-management">← 任务管理后台</a>
+<h1>部署准备</h1><p>先跑通任务和钱包记账，再按实际业务接入微信登录、短信和资金发放。</p></header>
+<h2>在本机体验</h2><p>准备一台装有 Docker Engine、Compose v2 和 Python 3.9+ 的电脑。进入登录版目录运行 <code>python3 run.py</code>（Windows 可用 <code>py -3 run.py</code>）。首次联网下载镜像和依赖，生成私有配置与管理员账号。通过模拟短信可以体验成员登录、领取、交证明、审核和钱包入账。</p>
+<h2>公开部署需要准备什么</h2>
+<article><h3>服务器、域名与图片存储</h3><p>准备能长期运行的服务器、PostgreSQL 16、Redis 7、DNS 管理权限和 HTTPS 证书。可将同一域名的两个子域分别指向管理后台和成员 H5。在中国内地托管并使用域名对外服务，向服务器接入商办理适用备案。成员截图请放私有存储桶，使用经过鉴权的短时访问地址。</p><a href="https://cloud.tencent.com/document/faq/243/19630">备案适用范围</a></article>
+<article><h3>成员通过短信验证手机号</h3><p>当前对接腾讯云短信。准备短信应用 SDKAppID、审核通过的签名和验证码模板 ID、相应的实名资质、发送额度与服务端密钥。后台驳回或结算短信属于另外的通知模板，可按需启用。正式环境使用 <code>SMS_PROVIDER=tencent</code>。</p><a href="https://cloud.tencent.com/document/product/382/43070">腾讯云验证码接入</a></article>
+<article><h3>微信内授权、打开任务与分享</h3><p>准备具备网页授权权限的公众号、AppID 和 AppSecret。配置网页授权域名、回跳白名单及所需的 JS 接口安全域名、服务器 IP 白名单。H5 的微信内授权用于取得本公众号下的用户标识 openid；业务要求绑定手机号时仍按提示完成短信验证。仅本机体验手机号登录时可关闭微信授权。</p><a href="https://developers.weixin.qq.com/doc/service/guide/h5/auth.html">公众号网页授权</a></article>
+<article><h3>微信商户真实发放奖励</h3><p>准备有资格的商户号，开通「商家转账」，按实际用途报备场景，关联具体 AppID，配置资金、限额和接口 IP。后端还需商户证书序列号、商户私钥、APIv3 密钥、微信支付验签公钥和公钥 ID，以及外网可达的 HTTPS 回调。商户号或公众号单独一个都不足以完成转账。</p><a href="https://pay.wechatpay.cn/doc/v3/merchant/4013740645">商家转账开通条件</a> · <a href="https://pay.wechatpay.cn/doc/v3/merchant/4012715211">用户确认收款与查单</a></article>
+<h2>奖励怎么到成员手上</h2><ol><li>审核人员核对截图，确认实际结算金额，系统把金额记入成员的钱包。</li><li>成员在手机微信内申请提现，由发布方审核。正式模式会向微信支付发起商家转账；需要用户确认时，成员按页面提示确认收款。</li><li>服务端接收并核验微信支付回调，或用原商户单号查单，再更新到账、失败或退款状态。核对业务流水和商户账单后完成验收。</li></ol>
+<p>在源码包的 <code>full-stack/docs/DEPLOYMENT.md</code> 查看启动、路径和验收步骤，<code>full-stack/docs/INTEGRATIONS.md</code> 包含各项配置字段。真实密钥和证书只存放在自己的服务端。</p>
+</main></html>

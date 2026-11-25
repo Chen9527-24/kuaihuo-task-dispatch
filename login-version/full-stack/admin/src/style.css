@@ -1,0 +1,200 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --app-radius: 18px;
+  --app-shell-bg: #f8fafc;
+  --app-theme-color: #16a34a;
+}
+
+html,
+body,
+#app {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  overflow: hidden;
+  font-family:
+    Inter,
+    "PingFang SC",
+    "Hiragino Sans GB",
+    "Microsoft YaHei",
+    "Helvetica Neue",
+    Arial,
+    sans-serif;
+}
+
+html.dark {
+  color-scheme: dark;
+  --app-shell-bg: #020617;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.card-surface {
+  border-radius: var(--app-radius);
+}
+
+.panel-surface {
+  @apply border border-slate-200/70 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-slate-900/85;
+  border-radius: calc(var(--app-radius) + 2px);
+}
+
+.app-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.app-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.45);
+  border-radius: 999px;
+}
+
+.el-drawer__header {
+  margin-bottom: 0;
+}
+
+.header-action-button {
+  @apply inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200/80 bg-white/80 text-slate-600 transition hover:-translate-y-0.5 hover:border-slate-300 hover:bg-white dark:border-slate-700/70 dark:bg-slate-900/75 dark:text-slate-300 dark:hover:border-slate-600 dark:hover:bg-slate-900;
+}
+
+.header-action-button-primary {
+  color: white;
+  border-color: transparent;
+  background: linear-gradient(135deg, var(--app-theme-color), color-mix(in srgb, var(--app-theme-color) 68%, white));
+}
+
+.header-action-button-primary:hover {
+  color: white;
+  border-color: transparent;
+}
+
+.el-menu {
+  border-right: none !important;
+}
+
+.el-menu-item,
+.el-sub-menu__title {
+  height: 46px;
+  border-radius: 16px;
+  margin: 6px 8px;
+}
+
+.el-sub-menu .el-menu-item,
+.el-sub-menu .el-sub-menu__title {
+  margin-left: 12px;
+}
+
+.el-menu-item.is-active {
+  background-color: color-mix(in srgb, var(--app-theme-color) 12%, transparent);
+  color: var(--app-theme-color) !important;
+}
+
+.el-menu-item:hover,
+.el-sub-menu__title:hover {
+  background-color: rgba(148, 163, 184, 0.08);
+}
+
+.el-menu-item .el-icon,
+.el-sub-menu__title .el-icon {
+  font-size: 18px;
+}
+
+html.dark .el-menu-item:hover,
+html.dark .el-sub-menu__title:hover {
+  background-color: rgba(51, 65, 85, 0.4);
+}
+
+html.dark .panel-surface {
+  box-shadow: none;
+}
+
+.app-menu.el-menu--collapse {
+  width: 100%;
+}
+
+.app-menu.el-menu--collapse .el-menu-item,
+.app-menu.el-menu--collapse .el-sub-menu__title {
+  display: flex;
+  justify-content: center;
+  margin-inline: 0;
+  padding-inline: 0 !important;
+}
+
+.app-menu.el-menu--collapse .el-menu-item .el-icon,
+.app-menu.el-menu--collapse .el-sub-menu__title .el-icon {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+.app-menu.el-menu--collapse .el-sub-menu__icon-arrow,
+.app-menu.el-menu--collapse .el-menu-tooltip__trigger + * {
+  display: none;
+}
+
+.app-menu:not(.el-menu--collapse) .el-menu-item .el-icon,
+.app-menu:not(.el-menu--collapse) .el-sub-menu__title .el-icon {
+  margin-right: 12px;
+}
+
+.app-menu-popper .el-menu-item,
+.app-menu-popper .el-sub-menu__title {
+  margin: 6px;
+}
+
+.el-dropdown-menu__item:focus,
+.el-dropdown-menu__item:not(.is-disabled):hover {
+  color: var(--app-theme-color);
+  background-color: color-mix(in srgb, var(--app-theme-color) 10%, transparent);
+}
+
+.app-breadcrumb .el-breadcrumb__item,
+.app-breadcrumb .el-breadcrumb__inner,
+.app-breadcrumb .el-breadcrumb__inner a {
+  color: rgb(100 116 139);
+  font-weight: 500;
+}
+
+.app-breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner {
+  color: rgb(15 23 42);
+}
+
+html.dark .app-breadcrumb .el-breadcrumb__item,
+html.dark .app-breadcrumb .el-breadcrumb__inner,
+html.dark .app-breadcrumb .el-breadcrumb__inner a {
+  color: rgb(148 163 184);
+}
+
+html.dark .app-breadcrumb .el-breadcrumb__item:last-child .el-breadcrumb__inner {
+  color: rgb(226 232 240);
+}
+
+.el-form-item {
+  align-items: flex-end;
+}
+
+.el-table,
+.el-table tr {
+  background: transparent !important;
+}
+
+.el-table th.el-table__cell,
+.el-table td.el-table__cell {
+  background: var(--el-bg-color) !important;
+}
+
+.el-table .el-table__fixed,
+.el-table .el-table__fixed-right,
+.el-table .el-table-fixed-column--left,
+.el-table .el-table-fixed-column--right,
+.el-table .el-table__fixed .el-table__cell,
+.el-table .el-table__fixed-right .el-table__cell,
+.el-table .el-table-fixed-column--left .el-table__cell,
+.el-table .el-table-fixed-column--right .el-table__cell {
+  background: var(--el-bg-color) !important;
+}

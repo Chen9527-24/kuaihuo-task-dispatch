@@ -1,0 +1,12 @@
+.git
+node_modules
+dist
+coverage
+uploads
+.env
+.env.*
+*.log
+*.bak
+*.tsbuildinfo
+artifacts
+.patch-backups

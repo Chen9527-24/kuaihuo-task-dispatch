@@ -1,0 +1,84 @@
+name: kuaihuo-task-login
+x-api: &api
+  image: kuaihuo-task-backend:local
+  env_file: ../.local/deploy.env
+  environment:
+    DATABASE_URL: postgresql://task:${POSTGRES_PASSWORD:?run the configuration step}@postgres:5432/tasks?schema=public
+    REDIS_URL: redis://redis:6379
+    HOST: 0.0.0.0
+    PORT: "3000"
+    APP_ORIGIN: ${ADMIN_ORIGIN},${H5_BASE_URL}
+    API_BASE_URL: ${APP_BASE_URL}
+    WECHAT_MP_OAUTH_ALLOWED_RETURN_ORIGINS: ${H5_BASE_URL}
+  depends_on:
+    postgres: {condition: service_healthy}
+    redis: {condition: service_healthy}
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: task
+      POSTGRES_DB: tasks
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?run the configuration step}
+    volumes: [database:/var/lib/postgresql/data]
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "task", "-d", "tasks"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+  redis:
+    image: redis:7
+    volumes: [cache:/data]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 30
+  initialize:
+    <<: *api
+    pull_policy: never
+    command: ["node", "initialize.cjs"]
+    volumes:
+      - tenant-config:/tenant-config
+      - ../.local/task-guides:/task-guides:ro
+  backend:
+    <<: *api
+    build:
+      context: .
+      dockerfile: ops/backend.Dockerfile
+    depends_on:
+      initialize: {condition: service_completed_successfully}
+    volumes:
+      - uploads:/app/uploads
+      - ../.local/certs:/run/task-certs:ro
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://127.0.0.1:3000/api/v1/health').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 5s
+      timeout: 4s
+      retries: 30
+  admin:
+    build:
+      context: .
+      dockerfile: ops/web.Dockerfile
+      args: {APP: admin, VITE_DISPATCH_BASE_URL: "${H5_BASE_URL}"}
+    depends_on:
+      backend: {condition: service_healthy}
+    ports: ["127.0.0.1:${ADMIN_PORT:-8781}:80"]
+  member:
+    build:
+      context: .
+      dockerfile: ops/web.Dockerfile
+      args: {APP: member, VITE_APP_ENV: "${NODE_ENV:-production}"}
+    depends_on:
+      backend: {condition: service_healthy}
+    ports: ["127.0.0.1:${MEMBER_PORT:-8782}:80"]
+    volumes:
+      - tenant-config:/tenant-config:ro
+      - ../.local/wechat-domain:/wechat-domain:ro
+      - ../.local/task-guides:/task-guides:ro
+volumes:
+  database: {}
+  cache: {}
+  uploads: {}
+  tenant-config: {}
