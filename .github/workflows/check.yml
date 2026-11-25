@@ -1,0 +1,62 @@
+name: Test standalone projects
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: "可选，填写 v1.2.3 格式的版本号以在测试通过后发布两个独立下载包"
+        required: false
+        type: string
+permissions:
+  contents: read
+jobs:
+  guest:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - working-directory: no-login-version
+        run: python -B -m unittest discover -s tests -v
+  full-login:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v4
+      - name: Start fresh standalone copy with PostgreSQL and Redis
+        run: |
+          cp -R login-version "$RUNNER_TEMP/task-login"
+          python3 "$RUNNER_TEMP/task-login/run.py"
+      - name: Verify admin authentication and member routing
+        run: python3 "$RUNNER_TEMP/task-login/full-stack/ops/check_install.py"
+  release:
+    if: (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')) || (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main' && inputs.release_version != '')
+    needs: [guest, full-login]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Publish the two standalone source archives
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ inputs.release_version || github.ref_name }}
+        run: |
+          [[ "$TAG" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]] || { echo '无效的发行版本号'; exit 1; }
+          if git ls-remote --exit-code --tags origin "refs/tags/$TAG" >/dev/null; then
+            git fetch --quiet origin "refs/tags/$TAG:refs/tags/$TAG"
+            test "$(git rev-list -n 1 "$TAG")" = "$GITHUB_SHA"
+          fi
+          git archive --format=zip --output="$RUNNER_TEMP/kuaihuo-task-dispatch-login.zip" HEAD login-version
+          git archive --format=zip --output="$RUNNER_TEMP/kuaihuo-task-dispatch-no-login.zip" HEAD no-login-version
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --target "$GITHUB_SHA" --title "快火任务分发 $TAG" --notes "登录完整版与免登录评论版可分别下载。每份源码均含中文部署说明、界面截图和非商业使用许可。"
+          fi
+          gh release upload "$TAG" "$RUNNER_TEMP"/kuaihuo-task-dispatch-*.zip --clobber
