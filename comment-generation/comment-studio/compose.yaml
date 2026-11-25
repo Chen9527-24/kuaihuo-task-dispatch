@@ -1,0 +1,26 @@
+name: comment-studio
+services:
+  studio:
+    build: .
+    env_file:
+      - .env
+    environment:
+      COMMENT_HOST: "0.0.0.0"
+      COMMENT_PORT: "8766"
+      COMMENT_DATA_DIR: /var/lib/comment-studio
+      COMMENT_PARSER_URL: http://parser:8000
+    ports:
+      - "127.0.0.1:${COMMENT_PORT:-8766}:8766"
+    volumes:
+      - studio-data:/var/lib/comment-studio
+    depends_on:
+      - parser
+    restart: unless-stopped
+  parser:
+    image: wujunwei928/parse-video-py:latest
+    environment:
+      PARSE_VIDEO_USERNAME: "${COMMENT_PARSER_USERNAME:-}"
+      PARSE_VIDEO_PASSWORD: "${COMMENT_PARSER_PASSWORD:-}"
+    restart: unless-stopped
+volumes:
+  studio-data:

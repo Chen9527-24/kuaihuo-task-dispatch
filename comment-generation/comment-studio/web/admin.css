@@ -1,0 +1,17 @@
+#admin-settings:not(:empty),#usage-summary:not(:empty){margin-top:24px;padding-top:22px;border-top:1px solid var(--line)}
+#admin-settings h3,#usage-summary h3{font-size:1.04rem}
+#admin-settings p,#usage-summary p{font-size:.87rem;color:var(--muted);margin:5px 0 12px}
+#admin-settings details{margin:0;border-top:1px solid var(--line)}
+#admin-settings summary{padding:12px 0;cursor:pointer;font-weight:600}
+.admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;padding:4px 0 16px}
+.admin-grid label{display:grid;align-content:start;gap:5px;color:var(--muted);font-size:.85rem}
+#admin-settings button[type="submit"]{margin-top:12px;padding:9px 16px;background:var(--green);color:white;border:0;border-radius:8px}
+#admin-settings [role="status"]{margin-left:10px;font-size:.85rem;color:var(--green)}
+.admin-bar,.usage-lines a{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.usage-metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:12px 0}
+.usage-metrics>div{background:var(--pale);border-radius:8px;padding:12px}
+.usage-metrics span,.usage-metrics strong{display:block}
+.usage-metrics span,.usage-lines{font-size:.8rem;color:var(--muted)}
+.usage-metrics strong{font-size:1.1rem;color:var(--green)}
+.usage-lines a{border-top:1px solid var(--line);padding:7px 0}.usage-lines a:hover{color:var(--green);text-decoration:underline}
+@media(max-width:620px){.admin-grid{grid-template-columns:1fr}.usage-metrics{grid-template-columns:1fr}}

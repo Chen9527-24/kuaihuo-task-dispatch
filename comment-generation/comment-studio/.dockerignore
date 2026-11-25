@@ -1,0 +1,10 @@
+*
+!*.py
+!web/
+!web/**
+!resources/
+!resources/**
+!requirements-oss.txt
+!Dockerfile
+!deploy/
+!deploy/**

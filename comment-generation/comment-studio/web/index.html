@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#123b37">
+  <title>生成工作台 · 评论工坊</title>
+  <link rel="stylesheet" href="/style.css">
+  <link rel="stylesheet" href="/admin.css">
+  <script src="/app.js" defer></script>
+  <script src="/admin.js" defer></script>
+</head>
+<body data-shell="loading">
+  <div id="bootState" class="boot-state" role="status">正在打开工作台…</div>
+  <a class="skip" href="#main">跳到主要内容</a>
+  <svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <symbol id="i-brand" viewBox="0 0 28 28"><path d="M6 6.5h16v11H12l-6 4.5z" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linejoin="round"/><path d="M10 11h8m-8 3h5" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></symbol>
+    <symbol id="i-pen" viewBox="0 0 24 24"><path d="m13 6 5 5M4 20l4.7-1.3L20 7.4a2 2 0 0 0-3.4-3.3L5.4 15.4 4 20Z"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.8"/><path d="M12 6.5v5.7l3.6 2"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2.5"/><circle cx="9" cy="10.5" r="1.8"/><path d="M5.8 15.6q3.3-4.5 6.6 0M15 10h3m-3 4h3"/></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path d="M3.2 5.4q5-2.1 8.8 1.1 4-3.2 8.8-1.1v13q-4.8-2-8.8 1-3.8-3-8.8-1zM12 6.5v13"/></symbol>
+    <symbol id="i-settings" viewBox="0 0 24 24"><path d="M3 8h7m5 0h6M3 16h11m5 0h2"/><circle cx="12.5" cy="8" r="2.4"/><circle cx="16.5" cy="16" r="2.4"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="m10 14 4-4m-6.3 2.2-2 2a3.6 3.6 0 0 0 5.1 5.1l3.1-3.1m2.4-4.4 2-2a3.6 3.6 0 0 0-5.1-5.1l-3.1 3.1"/></symbol>
+    <symbol id="i-text" viewBox="0 0 24 24"><path d="M5 6h14M5 10h14M5 14h10M5 18h7"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15m-5-5 5 5-5 5"/></symbol>
+    <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m9 5 7 7-7 7"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><rect x="8" y="8" width="12" height="13" rx="2"/><path d="M15.5 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/></symbol>
+    <symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.5 12q9.5-13.5 19 0-9.5 13.5-19 0Z"/><circle cx="12" cy="12" r="2.7"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-4-4 4 4 4-4M4.5 16v4h15v-4"/></symbol>
+    <symbol id="i-layers" viewBox="0 0 24 24"><path d="m3 8.1 9-4.6 9 4.6-9 4.7Zm0 4.1 9 4.6 9-4.6M3 16.4l9 4.6 9-4.6"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 6.5h16M4 12h16M4 17.5h16"/></symbol>
+  </svg>
+  <section id="authScreen" class="auth-screen" hidden aria-labelledby="authTitle">
+    <div class="auth-card panel">
+      <div class="auth-brand"><span class="brandmark"><svg><use href="#i-brand"/></svg></span>评论工坊</div>
+      <h1 id="authTitle">登录工作台</h1>
+      <p class="auth-desc">使用同一个账号管理评论生成和热启动。</p>
+      <form id="loginForm">
+        <label class="field">登录账号<input name="username" required maxlength="32" autocomplete="username" autocapitalize="none" spellcheck="false"></label>
+        <label class="field">密码<input name="password" type="password" required maxlength="128" autocomplete="current-password"></label>
+        <p id="authError" role="alert" class="form-error" hidden></p>
+        <button type="submit" class="button primary wide" id="authSubmit">登录</button>
+      </form>
+      <button type="button" class="text-button" id="toggleRegister">注册账号</button>
+    </div>
+  </section>
+  <header class="mobile-bar"><a class="brand" href="/" data-route="work"><span class="brandmark"><svg><use href="#i-brand"/></svg></span>评论工坊</a><button id="menu" class="icon-button" type="button" aria-expanded="false" aria-controls="sidebar" aria-label="打开导航"><svg class="ic"><use href="#i-menu"/></svg></button></header>
+  <div class="layout">
+    <aside id="sidebar" class="sidebar"><a class="brand" href="/" data-route="work"><span class="brandmark"><svg><use href="#i-brand"/></svg></span>评论工坊</a>
+      <nav aria-label="工作台导航">
+        <a href="?view=history" data-route="history"><svg class="ic"><use href="#i-clock"/></svg>任务管理</a>
+        <a href="?view=work" data-route="work"><svg class="ic"><use href="#i-pen"/></svg>生成评论</a>
+        <a href="?view=heat" data-route="heat" data-unified hidden><svg class="ic"><use href="#i-layers"/></svg>热启动</a>
+        <a href="?view=accounts" data-route="accounts"><svg class="ic"><use href="#i-users"/></svg>视频账号</a>
+        <a href="?view=guides" data-route="guides"><svg class="ic"><use href="#i-book"/></svg>写作指南</a>
+      </nav>
+      <div class="side-bottom"><a href="?view=users" data-route="users" id="usersNav" hidden><svg class="ic"><use href="#i-users"/></svg>用户管理</a><a href="?view=services" data-route="services"><svg class="ic"><use href="#i-settings"/></svg>服务状态</a></div>
+    </aside>
+    <main id="main" tabindex="-1">
+      <div class="topline"><div class="breadcrumb">工作区 <svg class="ic"><use href="#i-chevron"/></svg> <span id="crumb">生成工作台</span></div><button id="serviceChip" class="service-chip" type="button"><span class="status-dot"></span><span id="serviceText">读取服务状态</span></button><div class="session-menu" id="sessionMenu" hidden><span id="signedInName"></span><button id="signOut" class="text-button" type="button">退出登录</button></div></div>
+      <div class="content"><div class="legacy-banner" id="legacyBanner" hidden><p id="legacyInfo"></p><button type="button" class="button outline small" id="claimLegacy">归入当前账号</button></div>
+        <header class="page-head"><div><h1 id="pageTitle">生成工作台</h1><p id="pageDesc">从视频链接或已有文案，生成适合各个平台的评论草稿。</p></div><div class="heading-actions"><button id="newHeat" class="button outline" type="button" hidden><svg class="ic"><use href="#i-layers"/></svg>导入评论创建热启动</button><button id="newTask" class="button outline" type="button" hidden><svg class="ic"><use href="#i-plus"/></svg>生成评论</button></div></header>
+        <section id="view-work">
+          <form id="taskForm"><div class="workspace"><div class="flow">
+            <section class="panel" id="sourceCard"><div class="panel-heading"><div><h2>视频素材</h2><p>选择素材来源，开始这次生成。</p></div><svg class="heading-ic"><use href="#i-layers"/></svg></div>
+              <div class="tabs" role="group" aria-label="素材来源"><button id="modeLink" type="button" aria-pressed="true"><svg class="ic"><use href="#i-link"/></svg>从链接提取</button><button id="modeManual" type="button" aria-pressed="false"><svg class="ic"><use href="#i-text"/></svg>手动写文案</button></div>
+              <div id="inputLink" class="source-input"><label for="source">视频链接或分享内容</label><textarea id="source" rows="3" placeholder="粘贴视频链接，或 App 里复制的整段分享文字"></textarea><span class="hint">支持抖音、小红书与快手的公开作品链接。</span></div>
+              <div id="inputManual" class="source-input" hidden><div class="field-head"><label for="manualScript">视频文案</label><span id="manualCount" class="hint">0 字</span></div><textarea id="manualScript" rows="6" placeholder="粘贴口播、字幕，或描述视频里发生的事"></textarea><span class="hint">手动输入直接用于生成，无需解析和转写。</span></div>
+              <div class="account-line"><label for="accountSelect">归属账号</label><select id="accountSelect"><option value="">通用设置</option></select><button id="manageAccounts" type="button" class="text-button">管理账号</button></div>
+            </section>
+            <section id="detailCard" class="panel" hidden><div class="panel-heading"><div><h2>任务素材</h2><p id="detailMeta"></p></div><span id="taskState" class="tag"></span></div><p id="detailSource" class="source-cite" hidden></p><div id="taskMessage" class="notice" role="status" hidden></div><div class="media-area" id="mediaArea" hidden><video id="video" controls playsinline preload="metadata"></video><a id="download" class="text-button" download><svg class="ic"><use href="#i-download"/></svg>下载视频</a><span class="hint" id="expiry"></span></div><div class="field source-input"><div class="field-head"><label for="revisedScript">本次生成使用的文案</label><button class="text-button" id="copyScript" type="button">复制文案</button></div><textarea id="revisedScript" rows="5" placeholder="有了逐字稿或手动补充内容后，可以继续生成"></textarea><span id="revisionHint" class="hint"></span><div class="download-transcript"><button id="downloadText" type="button" class="text-button">下载文案 TXT</button><a id="downloadSrt" class="text-button" download hidden>下载原始时间轴 SRT</a></div></div><div id="recovery" class="actions"><button type="button" id="retry" class="button outline" hidden>重试未完成步骤</button><label id="uploadLabel" class="button outline" hidden>上传原视频<input type="file" id="upload" accept="video/*" class="file-input"></label></div></section>
+            <section id="optionsCard" class="panel"><div class="panel-heading"><div><h2>生成要求</h2><p>指定发布平台和数量，其他要求按需填写。</p></div><svg class="heading-ic"><use href="#i-settings"/></svg></div>
+              <fieldset class="platform-field"><legend>目标平台与主评论数</legend><div id="platforms"></div></fieldset>
+              <details id="videoOptions"><summary>视频信息 <span class="summary-help">目的、行业、业务与画面</span></summary><div class="detail-fields grid-2">
+                <label class="field">视频目的<input id="videoPurpose" placeholder="例如：展示小批量打样能力"></label><label class="field">发布标题<input id="videoTitle" placeholder="选填"></label><label class="field">行业<input id="industry" placeholder="可沿用账号资料"></label><label class="field">本条业务方向<input id="business" placeholder="例如：注塑外壳打样"></label><label class="field">关键画面或动作<textarea id="visuals" rows="2"></textarea></label><label class="field">系列前情与人物关系<textarea id="context" rows="2"></textarea></label>
+              </div></details>
+              <details id="writingOptions"><summary>评论与关键词 <span class="summary-help">用途、讨论重点与用词</span></summary><div class="detail-fields grid-2">
+                <label class="field">评论用途<select id="purpose"><option value="">自然讨论</option><option>引发讨论</option><option>收集问题</option><option>征集下期选题</option><option>承接业务咨询</option><option>剧情互动</option></select></label><label class="field">希望观众聊什么<input id="focus" placeholder="例如：首批数量没定，该怎么报价"></label><label class="field">必用原词<input id="required" placeholder="多个词用顿号或逗号分隔"></label><label class="field">可选关键词<input id="optional" placeholder="只在顺口时使用"></label><label class="field">避开词<input id="forbidden" placeholder="避免出现的说法"></label><label class="field">额外要求<input id="notes" placeholder="例如：少用专业术语"></label>
+              </div></details>
+              <details id="modelOptions"><summary>作者回复与模型 <span class="summary-help">配套回复、多模型对比</span></summary><div class="detail-fields grid-2">
+                <label class="checkline"><input type="checkbox" id="replies">配作者回复</label><label class="field">回复总条数<input type="number" id="replyCount" min="0" step="1" placeholder="留空则按平台自动分配" disabled></label><label class="field">生成模型<select id="provider"></select></label><label class="field">对比模型<select id="compareProvider"></select></label><p class="hint span-2">指定两家模型后，可先各生成 5 条样稿，对比会增加文本生成用量。</p>
+              </div></details>
+            </section>
+            <section id="resultsCard" class="panel" hidden><div class="panel-heading"><div><h2>评论结果</h2><p id="resultMeta"></p></div><button id="copyBatch" type="button" class="button outline small"><svg class="ic"><use href="#i-copy"/></svg>复制本批</button></div><label id="batchField" class="field batch-field">查看批次<select id="batchSelect"></select></label><div id="resultRows"></div></section>
+          </div>
+          <aside class="task-summary"><div class="summary-head"><svg class="ic"><use href="#i-layers"/></svg><h2>本次生成</h2></div><div class="count-line"><strong id="totalCount">20</strong><span>条主评论</span></div><div id="summaryPlatforms" class="pills"></div><dl class="summary-dl"><div><dt>归属账号</dt><dd id="summaryAccount">通用设置</dd></div><div><dt>作者回复</dt><dd id="summaryReply">关闭</dd></div><div><dt>生成模型</dt><dd id="summaryModel">平台默认</dd></div></dl><p id="summaryNotice" class="summary-notice" aria-live="polite" hidden></p><button class="button primary wide" type="submit" id="generate">提取并生成评论<svg class="ic"><use href="#i-arrow"/></svg></button><button class="button outline wide" type="button" id="compareBtn" hidden>对比两家样稿</button><button class="button quiet wide" type="button" id="previewPrompt"><svg class="ic"><use href="#i-eye"/></svg>预览与复制提示词</button></aside>
+          </div></form>
+        </section>
+        <section id="view-history" hidden><div class="panel"><div class="panel-heading"><h2>任务列表</h2><button id="refreshHistory" type="button" class="text-button">刷新</button></div><label class="field history-filter">视频账号<select id="historyAccount"><option value="">全部账号</option></select></label><div id="taskList"></div></div></section>
+        <section id="view-heat" hidden><div id="heatFrameHost" class="frame-host"></div></section>
+        <section id="view-users" hidden><div id="usersFrameHost" class="frame-host"></div></section>
+        <section id="view-accounts" hidden><div class="account-layout"><div class="panel"><div class="panel-heading"><h2>视频账号</h2><button class="text-button" id="addAccount" type="button"><svg class="ic"><use href="#i-plus"/></svg>新建</button></div><div id="accountList"></div></div><form id="accountForm" class="panel"><div class="panel-heading"><h2 id="accountFormTitle">新建视频账号</h2><button id="accountTasks" class="text-button" type="button" hidden>查看账号任务</button></div><div class="grid-2"><label class="field">账号名称<input id="a-name" required maxlength="80" placeholder="例如：工厂获客顾问"></label><label class="field">发布平台<select id="a-platform"><option value="">未指定</option><option>抖音</option><option>小红书</option><option>快手</option></select></label><label class="field span-2">公开账号标识或主页<input id="a-handle" placeholder="选填"></label><label class="field">行业<input id="a-industry"></label><label class="field">业务方向<input id="a-business"></label><label class="field span-2">目标观众<input id="a-audience" placeholder="这条内容平时主要给谁看"></label><label class="field span-2">说话特色与参考例句<textarea id="a-voice" rows="3"></textarea></label><label class="field span-2">事实边界与禁用表达<textarea id="a-boundaries" rows="2"></textarea></label></div><div class="actions end"><button class="button primary" type="submit">保存视频账号</button></div></form></div></section>
+        <section id="view-guides" hidden><div class="panel"><div class="panel-heading"><div><h2>提示词与写作规则</h2></div><button id="copyGuide" class="button outline small" type="button"><svg class="ic"><use href="#i-copy"/></svg>复制全文</button></div><label class="field">选择文档<select id="guideSelect"></select></label><pre id="guideText" class="readbox"></pre></div></section>
+        <section id="view-services" hidden><div class="panel"><div class="panel-heading"><div><h2>服务配置</h2><p>查看当前平台可用的解析、转写与生成能力。</p></div><button type="button" id="refreshServices" class="text-button">刷新</button></div><div id="serviceList"></div><div id="usage-summary"></div><div id="admin-settings"></div></div></section>
+      </div>
+    </main>
+  </div>
+  <dialog id="promptDialog"><div class="dialog-head"><h2>完整生成提示词</h2><button id="closeDialog" type="button" class="text-button">关闭</button></div><pre id="promptText" class="readbox"></pre><div class="actions end"><button type="button" id="copyPrompt" class="button primary"><svg class="ic"><use href="#i-copy"/></svg>复制提示词</button></div></dialog>
+  <div id="toast" role="status" aria-live="polite" hidden></div>
+</body>
+</html>

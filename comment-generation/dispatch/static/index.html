@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#184c3f">
+  <meta name="color-scheme" content="light">
+  <meta name="referrer" content="no-referrer">
+  <link rel="icon" href="data:,">
+  <title>快火评论分发</title>
+  <link rel="stylesheet" href="./static/style.css">
+  <link rel="stylesheet" href="./static/collection.css">
+  <script type="module" src="./static/app.js"></script>
+</head>
+<body>
+  <header class="masthead"><div class="header-inner">
+    <span class="brand"><i aria-hidden="true"></i>快火<span class="slash">/</span>评论分发</span>
+    <div class="account-menu"><span id="view-label" class="edition">任务分发</span>
+      <button type="button" id="sign-out" class="subtle" data-action="logout" hidden>退出</button>
+    </div>
+  </div></header>
+  <main id="app"><p class="hint">正在加载…</p></main>
+  <div id="notice" role="status" aria-live="polite"></div>
+  <dialog id="dialog" aria-labelledby="dialog-title"><div class="dialog-inner">
+    <header class="dialog-head"><h2 id="dialog-title"></h2><button type="button" class="icon-button" data-action="dismiss" aria-label="关闭窗口">×</button></header>
+    <div id="dialog-body"></div>
+  </div></dialog>
+  <dialog id="copy-result" class="guest-dialog" role="alertdialog" aria-labelledby="copy-result-title" aria-describedby="copy-result-message" closedby="none">
+    <div class="dialog-inner">
+      <h2 id="copy-result-title"></h2>
+      <p id="copy-result-message"></p>
+      <button type="button" class="primary" autofocus>确认</button>
+    </div>
+  </dialog>
+  <noscript>请启用浏览器的 JavaScript 以使用评论分发。</noscript>
+</body>
+</html>
