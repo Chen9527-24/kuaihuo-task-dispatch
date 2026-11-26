@@ -1,8 +1,63 @@
 # 快火任务分发
 
-这里提供两套可独立运行的中文任务分发源码。发布者准备作品链接和评论，参与者在手机页面领取。选择下面任意一个版本，就可以单独下载、启动和修改。
+本仓库提供自媒体视频评论生成和热启动任务分发。需要从视频文案准备评论时，先用下面的评论生成工作台。手里已有作品链接和评论时，可以直接选择[免登录评论版](no-login-version/README.md)或[登录完整版](login-version/README.md)。
 
-**自媒体视频评论生成**支持按平台生成评论草稿，配置关键词和作者回复。审核后可将评论、作品标题和同平台链接带入热启动草稿，也可以从 Excel 直接导入已有评论。[查看源码和本地运行说明](comment-generation/README.md)
+## 自媒体视频评论生成
+
+工作台支持为**抖音、小红书、快手**分别生成评论草稿。每条作品可以选择归属的视频账号，沿用该账号的行业、受众和说话风格，再按平台填写评论条数、讨论重点、必用词、可选词和避开词，也可以指定作者回复条数。[工作台源码](comment-generation/) · [提示词与写作指南](comment-generation/comment-studio/resources/)
+
+| 想做什么 | 需要准备什么 |
+| --- | --- |
+| 用已有文案预览提示词 | Python 3.9 或以上版本、浏览器和一段口播或字幕。这一步可以离线完成。 |
+| 在工作台直接生成评论 | 在「服务状态」配置千问、DeepSeek 或火山方舟其中一家的 API Key 和可用模型 ID。 |
+| 从作品链接提取文案 | 视频解析服务、FFmpeg、FFprobe，以及本机或云端语音识别服务。取得文案后可预览提示词或调用文本模型。[配置示例](comment-generation/comment-studio/.env.example) |
+
+### 先用一段文案试跑
+
+在仓库首页点 **Code → Download ZIP** 并解压，或用 Git 克隆仓库。从仓库根目录运行下面的命令。
+
+```sh
+cd comment-generation
+python3 comment-studio/server.py
+```
+
+Windows 可将第二行换成 `py -3 comment-studio/server.py`。打开 [本机工作台](http://127.0.0.1:8766/)，点「手动写文案」，例如粘贴“这批外壳先打 20 件样，确认卡扣尺寸后再开模”。选抖音 5 条，把“卡扣”填入「必用原词」，点「预览与复制提示词」。配置好模型后，就可以用同一份文案直接生成草稿。
+
+### 从生成结果创建热启动任务
+
+要让访客领取评论，使用 `comment-generation/` 随附的工作台和分发服务。发布者使用同一账号管理生成和热启动，两个服务共用一份 SQLite 数据库。若上一步的独立工作台正在运行，先按 `Ctrl+C` 停止它。
+
+**本机启动统一模式**（macOS / Linux）。打开两个终端，分别从仓库根目录运行。
+
+**终端一**启动访客领取服务。
+
+```sh
+cd comment-generation
+mkdir -p .dev-data
+export COMMENT_SHARED_DB="$PWD/.dev-data/shared.sqlite3"
+python3 dispatch/run.py --port 8780 --data-dir "$PWD/.dev-data/dispatch"
+```
+
+**终端二**启动发布者工作台。
+
+```sh
+cd comment-generation
+export COMMENT_SHARED_DB="$PWD/.dev-data/shared.sqlite3"
+export COMMENT_DATA_DIR="$PWD/.dev-data/studio"
+export COMMENT_PUBLIC_ORIGIN=http://127.0.0.1:8766
+export COMMENT_DISPATCH_PUBLIC_ORIGIN=http://127.0.0.1:8780
+python3 comment-studio/server.py
+```
+
+1. **整理评论。** 在 8766 工作台注册或登录发布者账号。生成完成后，在目标平台点「管理评论」，逐条编辑、删减，或按行粘贴。也支持 Excel 导入和导出。导入时在第一张工作表用「评论内容」作为列名，每行一条。
+2. **创建草稿。** 点「创建热启动」，工作台会带入作品标题、目标平台和该平台的主评论。用同平台链接生成时会沿用原分享内容。手填文案或跨平台分发时，在草稿中补上对应作品的分享链接。
+3. **发布和领取。** 核对草稿后点发布，复制该任务专属的领取链接。本机体验时，用另一个浏览器打开链接，填写昵称并按页面指引领取。发布者可在工作台查看已领数量和剩余评论。
+
+**已有评论时**，可以直接在「任务管理」点「导入评论创建热启动」，填写作品资料并导入评论，然后发布领取链接。
+
+要让其他设备通过链接领取，请为发布者工作台和访客领取服务配置可访问的 HTTPS 地址。管理员首次设置密码、模型用量预算和链接解析的详细步骤见[评论生成工作台运行说明](comment-generation/README.md)。
+
+## 独立任务分发版本
 
 | | [免登录评论版](no-login-version/README.md) | [登录完整版](login-version/README.md) |
 | --- | --- | --- |
@@ -27,7 +82,7 @@
 
 下载后先看[登录版准备清单与填写位置](login-version/README.md#登录版需要自行准备什么)。真实凭据仅填写在部署者自己的服务器上。
 
-## 在本机开始
+## 在本机启动独立分发版本
 
 下载本仓库后进入所选版本目录，在有 `run.py` 的位置执行 `python3 run.py`，Windows 使用 `py -3 run.py`。两个版本有各自的启动入口、配置、数据和许可文件。免登录版的链接在当前电脑演示。登录版默认使用模拟短信，可走通到任务审核与钱包入账。
 
@@ -47,4 +102,4 @@
 
 ## 许可
 
-两套源码均采用 PolyForm Noncommercial License 1.0.0。使用和再分发须遵守非商业许可并保留署名，商业用途需另行取得授权。项目源自[快火运营套件](https://github.com/Chen9527-24/kuaihuo-operations-suite)。[许可全文](LICENSE) · [中文说明](LICENSE.zh-CN.md) · [署名](NOTICE)
+评论生成工作台和两套独立分发源码均采用 PolyForm Noncommercial License 1.0.0。使用和再分发须遵守非商业许可并保留署名，商业用途需另行取得授权。项目源自[快火运营套件](https://github.com/Chen9527-24/kuaihuo-operations-suite)。[许可全文](LICENSE) · [中文说明](LICENSE.zh-CN.md) · [署名](NOTICE)
